@@ -22,7 +22,6 @@ class FrappeNotification:
         res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.web.addApp", {
             "app_name": app_name
         })
-        print(res[1])
         return res[0]
 
     # TODO: list all apps
@@ -42,13 +41,17 @@ class FrappeNotification:
         if res[0]:
             return res[1]
         else:
-            raise Exception(res[1]["message"])
+            raise Exception(res[1])
 
     # Add Topic
     def addTopic(topic_name: str) -> bool:
-        res = FrappeNotification._sendGetRequest("//api/method/notification_relay.api.topic.add", {
+        res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.topic.add", {
             "topic_name": topic_name
         })
+        if res[0]:
+            return res[1]["success"]
+        else:
+            raise Exception(res[1]["message"])
 
     # Remove Topic
     @staticmethod
@@ -56,6 +59,10 @@ class FrappeNotification:
         res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.topic.delete", {
             "topic_name": topic_name
         })
+        if res[0]:
+            return res[1]["success"]
+        else:
+            raise Exception(res[1])
 
     # Exists Topic
     @staticmethod
@@ -63,11 +70,22 @@ class FrappeNotification:
         res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.topic.exists", {
             "topic_name": topic_name
         })
+        if res[0]:
+            return res[1]["exists"]
+        else:
+            raise Exception(res[1])
 
     # List Topic
     @staticmethod
     def listTopic() -> list:
         res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.topic.list", {})
+        if res[0]:
+            if res[1]["success"]:
+                return res[1]["topics"]
+            else:
+                raise Exception(res[1]["message"])
+        else:
+            raise Exception(res[1])
 
     # Add Token (User)
     @staticmethod
@@ -76,6 +94,10 @@ class FrappeNotification:
             "user_id": user_id,
             "fcm_token": token
         })
+        if res[0]:
+            return res[1]["success"]
+        else:
+            raise Exception(res[1])
 
     # Remove Token (User)
     @staticmethod
@@ -84,6 +106,10 @@ class FrappeNotification:
             "user_id": user_id,
             "fcm_token": token
         })
+        if res[0]:
+            return res[1]["success"]
+        else:
+            raise Exception(res[1])
 
     # Subscribe Topic (User)
     @staticmethod
@@ -92,6 +118,10 @@ class FrappeNotification:
             "user_id": user_id,
             "topic_name": topic_name
         })
+        if res[0]:
+            return res[1]["success"]
+        else:
+            raise Exception(res[1])
 
     # Unsubscribe Topic (User)
     @staticmethod
@@ -100,6 +130,10 @@ class FrappeNotification:
             "user_id": user_id,
             "topic_name": topic_name
         })
+        if res[0]:
+            return res[1]["success"]
+        else:
+            raise Exception(res[1])
 
     # Send notification (User)
     @staticmethod
@@ -109,17 +143,25 @@ class FrappeNotification:
             "title": title,
             "content": content
         })
+        if res[0]:
+            return res[1]["success"]
+        else:
+            raise Exception(res[1])
 
     # TODO: Send bulk notification (User)
 
     # Send notification (Topic)
     @staticmethod
-    def sendNotificationToTopic(topic_name: str, title: str, body: str) -> bool:
+    def sendNotificationToTopic(topic_name: str, title: str, content: str) -> bool:
         res = FrappeNotification._sendPostRequest("/api/method/notification_relay.api.send_notification.topic", {}, {
             "topic_name": topic_name,
             "title": title,
-            "body": body
+            "content": content
         })
+        if res[0]:
+            return res[1]["success"]
+        else:
+            raise Exception(res[1])
 
     # TODO: Send bulk notification (Topic)
 
