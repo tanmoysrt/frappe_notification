@@ -1,8 +1,5 @@
 import requests
 
-# TODO: fix return values
-
-
 class FrappeNotification:
     CENTRAL_SERVER_ENDPOINT = "http://notification.relay:8000" # must not end with /
     PROJECT_ID = ""
