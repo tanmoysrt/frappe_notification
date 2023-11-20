@@ -2,21 +2,21 @@ import requests
 
 class FrappeNotification:
     CENTRAL_SERVER_ENDPOINT = "http://notification.relay:8000" # must not end with /
-    PROJECT_ID = ""
+    PROJECT_NAME = ""
     API_KEY = ""
 
     def __init__(self) -> None:
         raise NotImplementedError
     
     @staticmethod
-    def setCredential(project_id: str, api_key: str) -> None:
-        FrappeNotification.PROJECT_ID = project_id
+    def setCredential(project_name: str, api_key: str) -> None:
+        FrappeNotification.PROJECT_NAME = project_name
         FrappeNotification.API_KEY = api_key
 
     # Add Web App
     @staticmethod
     def addApp(app_name: str) -> bool:
-        res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.web.addApp", {
+        res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.web.add_app", {
             "app_name": app_name
         })
         return res[0]
@@ -26,7 +26,7 @@ class FrappeNotification:
     # Fetch endpoint of Web App Config
     @staticmethod
     def getAppConfigEndpoint(app_name: str) -> str:
-        route = f"/api/method/notification_relay.api.web.config?project_id={FrappeNotification.PROJECT_ID}&app_name={app_name}"
+        route = f"/api/method/notification_relay.api.web.config?project_name={FrappeNotification.PROJECT_NAME}&app_name={app_name}"
         return FrappeNotification._createRoute(route)
 
     # Fetch config of Web App
@@ -202,6 +202,6 @@ class FrappeNotification:
 
     @staticmethod
     def _injectCredentialsInQuery(query: dict) -> dict:
-        query["project_id"] = FrappeNotification.PROJECT_ID
+        query["project_name"] = FrappeNotification.PROJECT_NAME
         query["api_key"] = FrappeNotification.API_KEY
         return query
