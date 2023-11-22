@@ -4,14 +4,16 @@ class FrappeNotification:
     CENTRAL_SERVER_ENDPOINT = "http://notification.relay:8000" # must not end with /
     PROJECT_NAME = ""
     API_KEY = ""
+    API_SECRET = ""
 
     def __init__(self) -> None:
         raise NotImplementedError
     
     @staticmethod
-    def setCredential(project_name: str, api_key: str) -> None:
+    def setCredential(project_name: str, api_key: str, api_secret: str) -> None:
         FrappeNotification.PROJECT_NAME = project_name
         FrappeNotification.API_KEY = api_key
+        FrappeNotification.API_SECRET = api_secret
 
     # Add Web App
     @staticmethod
@@ -165,7 +167,10 @@ class FrappeNotification:
     @staticmethod
     def _sendGetRequest(route: str, params: dict) -> (bool, dict):
         try:
-            response = requests.get(FrappeNotification._createRoute(route), params=FrappeNotification._injectCredentialsInQuery(params))
+            headers = {
+                "Authorization": f"token {FrappeNotification.API_KEY}:{FrappeNotification.API_SECRET}"
+            }
+            response = requests.get(FrappeNotification._createRoute(route), params=params, headers=headers)
             if response.status_code == 200:
                 responseJson = response.json()
                 return True, responseJson["message"]
@@ -178,7 +183,10 @@ class FrappeNotification:
     @staticmethod
     def _sendPostRequest(route: str, params: dict, body: dict) -> (bool, dict):
         try:
-            response = requests.post(FrappeNotification._createRoute(route), params=FrappeNotification._injectCredentialsInQuery(params), json=FrappeNotification._injectCredentialsInQuery(body))
+            headers = {
+                "Authorization": f"token {FrappeNotification.API_KEY}:{FrappeNotification.API_SECRET}"
+            }
+            response = requests.post(FrappeNotification._createRoute(route), params=params, json=body, headers=headers)
             if response.status_code == 200:
                 responseJson = response.json()
                 return True, responseJson["message"]
