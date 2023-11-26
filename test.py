@@ -1,2 +1,0 @@
-from notification import FrappeNotification
-FrappeNotification.setCredential(project_name="eaec6ca60b", api_key="701baa7aef822277df74e45ee3247be3f8a92fea32884a37da")

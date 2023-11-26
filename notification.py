@@ -18,7 +18,7 @@ class FrappeNotification:
     # Add Web App
     @staticmethod
     def addApp(app_name: str) -> bool:
-        res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.web.add_app", {
+        res = FrappeNotification._sendPostRequest("/api/method/notification_relay.api.web.add_app", {}, {
             "app_name": app_name
         })
         return res[0]
@@ -44,7 +44,7 @@ class FrappeNotification:
 
     # Add Topic
     def addTopic(topic_name: str) -> bool:
-        res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.topic.add", {
+        res = FrappeNotification._sendPostRequest("/api/method/notification_relay.api.topic.add", {}, {
             "topic_name": topic_name
         })
         if res[0]:
@@ -55,7 +55,7 @@ class FrappeNotification:
     # Remove Topic
     @staticmethod
     def removeTopic(topic_name: str) -> bool:
-        res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.topic.delete", {
+        res = FrappeNotification._sendPostRequest("/api/method/notification_relay.api.topic.delete", {}, {
             "topic_name": topic_name
         })
         if res[0]:
@@ -66,7 +66,7 @@ class FrappeNotification:
     # Exists Topic
     @staticmethod
     def existsTopic(topic_name: str) -> bool:
-        res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.topic.exists", {
+        res = FrappeNotification._sendPostRequest("/api/method/notification_relay.api.topic.exists", {}, {
             "topic_name": topic_name
         })
         if res[0]:
@@ -74,22 +74,10 @@ class FrappeNotification:
         else:
             raise Exception(res[1])
 
-    # List Topic
-    @staticmethod
-    def listTopic() -> list:
-        res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.topic.list", {})
-        if res[0]:
-            if res[1]["success"]:
-                return res[1]["topics"]
-            else:
-                raise Exception(res[1]["message"])
-        else:
-            raise Exception(res[1])
-
     # Add Token (User)
     @staticmethod
     def addToken(user_id: str, token: str) -> bool:
-        res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.token.add", {
+        res = FrappeNotification._sendPostRequest("/api/method/notification_relay.api.token.add", {}, {
             "user_id": user_id,
             "fcm_token": token
         })
@@ -101,7 +89,7 @@ class FrappeNotification:
     # Remove Token (User)
     @staticmethod
     def removeToken(user_id: str, token: str) -> bool:
-        res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.token.remove", {
+        res = FrappeNotification._sendPostRequest("/api/method/notification_relay.api.token.remove", {}, {
             "user_id": user_id,
             "fcm_token": token
         })
@@ -113,7 +101,7 @@ class FrappeNotification:
     # Subscribe Topic (User)
     @staticmethod
     def subscribeTopic(user_id: str, topic_name: str) -> bool:
-        res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.subscription.subscribe", {
+        res = FrappeNotification._sendPostRequest("/api/method/notification_relay.api.subscription.subscribe", {}, {
             "user_id": user_id,
             "topic_name": topic_name
         })
@@ -125,7 +113,7 @@ class FrappeNotification:
     # Unsubscribe Topic (User)
     @staticmethod
     def unsubscribeTopic(user_id: str, topic_name: str) -> bool:
-        res = FrappeNotification._sendGetRequest("/api/method/notification_relay.api.subscription.unsubscribe", {
+        res = FrappeNotification._sendPostRequest("/api/method/notification_relay.api.subscription.unsubscribe", {}, {
             "user_id": user_id,
             "topic_name": topic_name
         })
@@ -167,6 +155,7 @@ class FrappeNotification:
     @staticmethod
     def _sendGetRequest(route: str, params: dict) -> (bool, dict):
         try:
+            params["project_name"] = FrappeNotification.PROJECT_NAME
             headers = {
                 "Authorization": f"token {FrappeNotification.API_KEY}:{FrappeNotification.API_SECRET}"
             }
@@ -183,6 +172,7 @@ class FrappeNotification:
     @staticmethod
     def _sendPostRequest(route: str, params: dict, body: dict) -> (bool, dict):
         try:
+            body["project_name"] = FrappeNotification.PROJECT_NAME
             headers = {
                 "Authorization": f"token {FrappeNotification.API_KEY}:{FrappeNotification.API_SECRET}"
             }
